@@ -10,8 +10,7 @@ class CreateCommand extends Command {
   static const _nameTemplate = 'starter_kit_flutter';
 
   CreateCommand() {
-    const starterGitUrl =
-        'https://github.com/ishafiul/starter_kit_flutter.git';
+    const starterGitUrl = 'https://github.com/ishafiul/starter_kit_flutter.git';
     argParser.addOption(
       _gitUrl,
       abbr: 'g',
@@ -83,7 +82,7 @@ class CreateCommand extends Command {
         newLinesYaml.add(line.replaceFirst(_nameTemplate, name));
         newLinesYaml.add(
           line.replaceFirst(
-            _nameTemplate,
+            _nameTemplate.replaceAll('_', ' '),
             name
                 .replaceAll('_', ' ')
                 .split(' ')
@@ -136,7 +135,6 @@ class CreateCommand extends Command {
     final gitDir = Directory('$name/.git');
     gitDir.deleteSync(recursive: true);
 
-
     ///
     final libDir = Directory('$name/lib');
     final dartFiles =
@@ -154,11 +152,10 @@ class CreateCommand extends Command {
       file.writeAsStringSync(newLines.join('\n'));
     }
 
-
     ///
     final test = Directory('$name/test');
     final testDirDartFiles =
-    findFilesInDir(test).where((f) => f.path.endsWith('.dart'));
+        findFilesInDir(test).where((f) => f.path.endsWith('.dart'));
     for (final file in testDirDartFiles) {
       final lines = file.readAsLinesSync();
       final newLines = <String>[];
