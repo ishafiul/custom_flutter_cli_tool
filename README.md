@@ -5,5 +5,5 @@ dart pub global activate --source git https://github.com/ishafiul/custom_flutter
 ```
 
 ```shell
-ipp create <PROJECT_NAME>
+ishaf create <PROJECT_NAME>
 ```
