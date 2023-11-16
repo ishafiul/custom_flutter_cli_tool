@@ -76,12 +76,12 @@ class CreateCommand extends Command {
   void _setup(String name) {
     /// pubspec
     final pubspec = File('$name/pubspec.yaml');
-    final lines = pubspec.readAsLinesSync();
-    final newLines = <String>[];
-    for (final line in lines) {
+    final linesYaml = pubspec.readAsLinesSync();
+    final newLinesYaml = <String>[];
+    for (final line in linesYaml) {
       if (line.contains('name:')) {
-        newLines.add(line.replaceFirst(_nameTemplate, name));
-        newLines.add(
+        newLinesYaml.add(line.replaceFirst(_nameTemplate, name));
+        newLinesYaml.add(
           line.replaceFirst(
             _nameTemplate,
             name
@@ -92,10 +92,10 @@ class CreateCommand extends Command {
           ),
         );
       } else {
-        newLines.add(line);
+        newLinesYaml.add(line);
       }
     }
-    pubspec.writeAsStringSync(newLines.join('\n'));
+    pubspec.writeAsStringSync(newLinesYaml.join('\n'));
 
     /// readme
     final readme = File('$name/README.md');
@@ -136,10 +136,30 @@ class CreateCommand extends Command {
     final gitDir = Directory('$name/.git');
     gitDir.deleteSync(recursive: true);
 
+
+    ///
     final libDir = Directory('$name/lib');
     final dartFiles =
         findFilesInDir(libDir).where((f) => f.path.endsWith('.dart'));
     for (final file in dartFiles) {
+      final lines = file.readAsLinesSync();
+      final newLines = <String>[];
+      for (final line in lines) {
+        if (line.startsWith('import') && line.contains(_nameTemplate)) {
+          newLines.add(line.replaceFirst(_nameTemplate, name));
+        } else {
+          newLines.add(line);
+        }
+      }
+      file.writeAsStringSync(newLines.join('\n'));
+    }
+
+
+    ///
+    final test = Directory('$name/test');
+    final testDirDartFiles =
+    findFilesInDir(test).where((f) => f.path.endsWith('.dart'));
+    for (final file in testDirDartFiles) {
       final lines = file.readAsLinesSync();
       final newLines = <String>[];
       for (final line in lines) {
