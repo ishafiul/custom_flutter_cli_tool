@@ -81,16 +81,6 @@ class CreateCommand extends Command {
     for (final line in linesYaml) {
       if (line.contains('name:')) {
         newLinesYaml.add(line.replaceFirst(_nameTemplate, name));
-        newLinesYaml.add(
-          line.replaceFirst(
-            _nameTemplate,
-            name
-                .replaceAll('_', ' ')
-                .split(' ')
-                .map((word) => word.capitalize())
-                .join(' '),
-          ),
-        );
       } else {
         newLinesYaml.add(line);
       }
